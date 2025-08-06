@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hello/core/models/product.dart';
-import 'package:hello/core/theme/app_color.dart';
-import 'package:hello/feature/layout/cart/bloc/cart_bloc.dart';
-import 'package:hello/feature/layout/cart/bloc/cart_event.dart';
 import 'package:hello/feature/layout/home/bloc/product_bloc.dart';
 import 'package:hello/feature/layout/home/bloc/product_event.dart';
 import 'package:hello/feature/layout/home/bloc/product_state.dart';
 
 import '../../../widget/custom_bottom_navigavation_bar.dart';
+import '../../product_detail/screen/product_detail_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   final String username;
@@ -196,14 +194,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     child: InkWell(
                       onTap: () {
-                        context.read<CartBloc>().add(
-                          AddToCartEvent(productId: product.id),
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              "Đã thêm ${product.name} vào giỏ hàng!",
-                            ),
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ProductDetailScreen(product: product),
                           ),
                         );
                       },
@@ -220,7 +214,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 width: double.infinity,
                                 fit: BoxFit.cover,
                                 errorBuilder: (context, error, stackTrace) =>
-                                    const Icon(Icons.error),
+                                const Icon(Icons.error),
                               ),
                             ),
                           ),
@@ -290,12 +284,10 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               child: InkWell(
                 onTap: () {
-                  context.read<CartBloc>().add(
-                    AddToCartEvent(productId: product.id),
-                  );
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text("Đã thêm ${product.name} vào giỏ hàng!"),
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProductDetailScreen(product: product),
                     ),
                   );
                 },
@@ -312,7 +304,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           width: double.infinity,
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) =>
-                              const Icon(Icons.error),
+                          const Icon(Icons.error),
                         ),
                       ),
                     ),

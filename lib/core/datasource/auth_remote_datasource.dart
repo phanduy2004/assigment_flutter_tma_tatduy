@@ -1,4 +1,3 @@
-
 import '../../sqlite/database_helper.dart';
 
 class AuthRemoteDatasource {
@@ -14,6 +13,21 @@ class AuthRemoteDatasource {
       return userData;
     } catch (e) {
       throw Exception('Login failed: $e');
+    }
+  }
+
+  Future<Map<String, dynamic>> register(String username, String? fullname,
+      String email, String password, String confirmPassword) async {
+    try {
+      final userData = await _databaseHelper.register(
+          username: username,
+          password: password,
+          confirmPassword: confirmPassword,
+          email: email,
+          fullName: fullname);
+      return userData;
+    } catch (e) {
+      throw Exception('Register failed: $e');
     }
   }
 }

@@ -33,4 +33,21 @@ class AuthRepositoryImpl implements AuthRepository {
       throw Exception('Đăng nhập thất bại: $e');
     }
   }
+
+  @override
+  Future<Map<String, dynamic>> register({required String username, String? fullname, required String email, required String password, required String confirmPassword}) async {
+    try {
+      // Nếu không tìm thấy trong SQLite, thử API
+      final response = await authRemoteDatasource.register(username, fullname, email, password, confirmPassword);
+      await databaseHelper.saveUser(
+        username: response['username'],
+        password: password,
+        email: response['email'],
+        fullName: response['fullName'],
+      );
+      return response;
+    } catch (e) {
+      throw Exception('Đăng kí thất bại: $e');
+    }
+  }
 }

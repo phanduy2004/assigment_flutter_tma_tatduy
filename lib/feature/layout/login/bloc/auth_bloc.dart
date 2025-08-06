@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/repository/auth_reporsitory.dart';
@@ -9,6 +11,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   AuthBloc({required this.authRepository}) : super(AuthState()) {
     on<LoginEvent>(_onLoginEvent);
+    on<RegisterUserEvent>(_onRegisterUserEvent);
   }
 
   Future<void> _onLoginEvent(LoginEvent event, Emitter<AuthState> emit) async {
@@ -17,6 +20,22 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final user = await authRepository.login(
         username: event.username,
         password: event.password,
+      );
+      emit(state.copyWith(status: AuthStatus.success, username: user['username']));
+    } catch (e) {
+      emit(state.copyWith(status: AuthStatus.error, errorMessage: e.toString()));
+    }
+  }
+
+  Future<void> _onRegisterUserEvent(RegisterUserEvent event, Emitter<AuthState> emit) async {
+    emit(state.copyWith(status: AuthStatus.loading));
+    try {
+      final user = await authRepository.register(
+        username: event.username,
+        password: event.password,
+        email: event.email,
+        confirmPassword: event.password,
+        fullname: event.fullname
       );
       emit(state.copyWith(status: AuthStatus.success, username: user['username']));
     } catch (e) {
